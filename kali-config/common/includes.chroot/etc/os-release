@@ -1,0 +1,10 @@
+<<'EOF'
+NAME="Starlight Security OS"
+PRETTY_NAME="Starlight Security OS 2025.1"
+ID=starlight
+ID_LIKE=debian
+HOME_URL="https://github.com/hparrett1951/StarlightSecurityOS"
+WIKI_URL="https://github.com/hparrett1951/StarlightSecurityOS/wiki"
+BUG_REPORT_URL="https://github.com/hparrett1951/StarlightSecurityOS/issues"
+VERSION_CODENAME=Project Arrow
+EOF

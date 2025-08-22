@@ -1,0 +1,7 @@
+#!/bin/sh
+
+apt -y remove desktop-base tango-icon-theme xorg
+# Kali 2025.1: live image is too big, remove texlive-latex-extra,
+# as it's not a hard dependency, only a Recommends of gvmd-common
+apt -y remove texlive-latex-extra
+apt -y autoremove

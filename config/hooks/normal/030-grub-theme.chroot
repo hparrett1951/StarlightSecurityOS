@@ -1,0 +1,23 @@
+#!/bin/sh
+set -e
+THEME_DIR="/boot/grub/themes/starlight"
+ASSET="/opt/starlight-assets/grub/background.png"
+
+if [ -f "$ASSET" ]; then
+  echo "[starlight] Applying GRUB background from $ASSET"
+  mkdir -p "$THEME_DIR"
+  cp "$ASSET" "$THEME_DIR/background.png"
+  cat > "$THEME_DIR/theme.txt" <<EOF
++ background_image: "background.png"
+EOF
+  # ensure defaults
+  if [ -f /etc/default/grub ]; then
+    sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=2/' /etc/default/grub || true
+    sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/' /etc/default/grub || true
+  fi
+  # Set theme path
+  grep -q '^GRUB_THEME=' /etc/default/grub && sed -i 's#^GRUB_THEME=.*#GRUB_THEME="/boot/grub/themes/starlight/theme.txt"#' /etc/default/grub     || echo 'GRUB_THEME="/boot/grub/themes/starlight/theme.txt"' >> /etc/default/grub
+  update-grub || grub-mkconfig -o /boot/grub/grub.cfg || true
+else
+  echo "[starlight] Skipping GRUB background (asset not found at $ASSET)"
+fi

@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+THEME_SRC_DIR="/opt/starlight-assets/plymouth"
+THEME_NAME="starlight"
+THEME_DST="/usr/share/plymouth/themes/$THEME_NAME"
+
+if [ -f "$THEME_SRC_DIR/$THEME_NAME.plymouth" ]; then
+  echo "[starlight] Installing Plymouth theme from $THEME_SRC_DIR"
+  mkdir -p "$THEME_DST"
+  cp -r "$THEME_SRC_DIR/"* "$THEME_DST/"
+  update-alternatives --install /usr/share/plymouth/themes/default.plymouth default.plymouth "$THEME_DST/$THEME_NAME.plymouth" 100 || true
+  update-alternatives --set default.plymouth "$THEME_DST/$THEME_NAME.plymouth" || true
+  if command -v update-initramfs >/dev/null 2>&1; then
+    update-initramfs -u || true
+  elif command -v dracut >/dev/null 2>&1; then
+    dracut -f || true
+  fi
+else
+  echo "[starlight] Skipping Plymouth (theme file not found at $THEME_SRC_DIR/$THEME_NAME.plymouth)"
+fi

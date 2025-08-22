@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+
+# This runs INSIDE the chroot. live-build places *.chroot hooks during rootfs build.
+echo "[starlight] Installing Kali + Parrot apt sources and keys..."
+
+install -d /etc/apt/sources.list.d /usr/share/keyrings
+
+# Import repo keys
+curl -fsSL https://archive.kali.org/archive-key.asc   | gpg --dearmor > /usr/share/keyrings/kali-archive-keyring.gpg
+
+curl -fsSL https://deb.parrot.sh/parrot/mirrors/parrot.gpg   | gpg --dearmor > /usr/share/keyrings/parrot-archive-keyring.gpg
+
+# Write sources
+cat >/etc/apt/sources.list.d/starlight-kali.list <<'EOF'
+deb [signed-by=/usr/share/keyrings/kali-archive-keyring.gpg] http://http.kali.org/kali kali-rolling main contrib non-free non-free-firmware
+EOF
+
+cat >/etc/apt/sources.list.d/starlight-parrot.list <<'EOF'
+deb [signed-by=/usr/share/keyrings/parrot-archive-keyring.gpg] http://deb.parrot.sh/parrot parrot main contrib non-free
+deb [signed-by=/usr/share/keyrings/parrot-archive-keyring.gpg] http://deb.parrot.sh/parrot parrot-security main contrib non-free
+deb [signed-by=/usr/share/keyrings/parrot-archive-keyring.gpg] http://deb.parrot.sh/parrot parrot-backports main contrib non-free
+EOF
+
+# Update indices (ignore failures so build keeps going if mirrors are slow)
+apt-get update || true
+
+echo "[starlight] Done."

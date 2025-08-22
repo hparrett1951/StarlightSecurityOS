@@ -1,0 +1,3 @@
+#!/bin/sh
+set -e
+lb config \  --architectures amd64 \  --binary-images iso-hybrid \  --distribution bookworm \  --debian-installer live \  --linux-flavours amd64

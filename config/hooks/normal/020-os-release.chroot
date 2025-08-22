@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+OSR=/etc/os-release
+[ -f "$OSR" ] || touch "$OSR"
+cp "$OSR" "${OSR}.bak.$(date +%s)" || true
+
+# Set name + pretty name + id
+grep -q '^NAME=' "$OSR" && sed -i 's/^NAME=.*/NAME="Starlight"/' "$OSR" || echo 'NAME="Starlight"' >> "$OSR"
+grep -q '^PRETTY_NAME=' "$OSR" && sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Starlight Security OS"/' "$OSR" || echo 'PRETTY_NAME="Starlight Security OS"' >> "$OSR"
+grep -q '^ID=' "$OSR" && sed -i 's/^ID=.*/ID=starlight/' "$OSR" || echo 'ID=starlight' >> "$OSR"
+grep -q '^HOME_URL=' "$OSR" || echo 'HOME_URL=https://starlight.local' >> "$OSR"
+
+echo "[starlight] os-release updated:"
+cat "$OSR"
