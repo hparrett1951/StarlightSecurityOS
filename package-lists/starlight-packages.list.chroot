@@ -1,0 +1,18 @@
+# Put packages you want in the live system (chroot) here, one per line.
+# Core tools
+vim
+curl
+git
+htop
+ufw
+
+# SSH server
+openssh-server
+
+# Torrent stack options (pick one or more)
+qbittorrent-nox
+transmission-daemon
+
+# Networking / diagnostics
+net-tools
+traceroute
